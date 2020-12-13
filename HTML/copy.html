@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <title>js实现复制内容到粘贴板的功能</title>
+    
+  </head>
+
+  <body>
+    <div id="copyText">将被复制的内容</div>
+    <a href="weixin://" onclick="copy()">移动端跳转至微信(打开微信)</a>
+    <button class="btn" onclick=copy()>Copy</button>
+
+    <script>
+      function copy() {
+        // 可以通过select()方法，选中输入框的文本，然后调用copy 命令，将文本复制到剪切板,但是select()方法只对<input>和<textarea>有效
+        // 因为这两个DOM具有select方法，可以选中内容（document.execCommand('copy')复制内容必要条件）;
+        var text = document.getElementById('copyText').innerText;
+        var textareaEl = document.createElement('textarea');  // 注意这里可以使用input元素，但是input不支持换行（按需使用）
+        textareaEl.setAttribute('readonly', 'readonly'); // 防止手机上弹出软键盘
+        textareaEl.value = text;  // 给textarea/input赋值为需要复制的内容
+        document.body.appendChild(textareaEl);  // 将DOM添加到文档中
+        textareaEl.select();
+        var res = document.execCommand('copy');  // 执行复制命令,本身会返回true或者是false，可以根据此返回设置相应的提示
+        if(res){
+          alert('复制成功');
+        }
+        document.body.removeChild(textareaEl);  // 最后从文档中移除DOM元素
+      }
+    </script>
+  </body>
+</html>

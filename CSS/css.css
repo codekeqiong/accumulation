@@ -1,0 +1,35 @@
+ /* 文案超出显示省略号 */
+.app{
+  white-space: nowrap;    /* 显示不换行 */
+  text-overflow: ellipsis;  /* 超出的部分显示为省略号 */
+  overflow: hidden;
+}
+ /* 伪类实现 */
+ .contain{
+   position: relative;
+ }
+ .contain::after{
+   content: '';
+   position: absolute;
+   bottom: 0;
+   width: calc(100% - 120px);
+   height: 1px;
+   background: #f5f5f5;
+   transform: scaleY(0.3);
+ }
+ /* 特殊的选择器 odd奇数 even偶数 */
+ div:nth-last-child(odd){
+  /* nth-last-child伪类接受一个参数, 用来作为一个模式，从后往前匹配元素 odd奇数 even偶数 括号中也可以是一个表达式<An+B>*/
+ }
+ /* 等价于下面的表达式 */
+ div:nth-last-child(2n+1){
+
+ }
+p:last-child(){}  /* CSS 伪类 代表父元素的最后一个子元素 */
+:nth-child(an+b){}  /*这个 CSS 伪类首先找到所有当前元素的兄弟元素，然后按照位置先后顺序从1开始排序，选择的结果为CSS伪类:nth-child括号中表达式（an+b）匹配到的元素集合 */
+
+div{
+  transform: '';
+  transition: '';
+}
+/* 子元素设置padding之后会导致外层设置的border-radius失效、ul>li的布局下面会存在 */
