@@ -108,8 +108,8 @@ function polling() {
 // 6.常见的字符串处理方法
 charAt(index) // 返回指定索引位置处的字符。超出则返回空字符串
 slice(start,end)  // [start, end) 返回字符串的片段。【为负则倒着截取】
-substring(start,end)  //（不包括end）end参数是可省的，如果没有传入则是从start到结尾
-substr(start[包含],length) //返回字符串片段
+substring(start,end)  // （不包括end）end参数是可省的，如果没有传入则是从start到结尾
+substr(start,length) // 返回字符串片段,包含开头
 indexOf('要查找的字符串', startIndex) //返回第一次出现子字符串位置。如果没有找到子字符串则返回-1
 lastIndexOf()  //方法返回String对象中字符串最后出现的位置。如果没有匹配到子字符串，则返回-1
 search()  //方法返回与查找内容匹配的第一个 字符串 的位置
@@ -141,14 +141,14 @@ this.setState({...state})
 async function a1 () {
   console.log('a')
   await a2()
-  console.log('b')
+  console.log('b')  // 进入微任务队列
 }
 async function a2 () {
   console.log('c')
 }
 console.log('d')
 setTimeout(() => {
-  console.log('e')
+  console.log('e')  // 进入宏任务队列
 }, 0)
 Promise.resolve().then(() => {
   console.log('f')
@@ -156,12 +156,12 @@ Promise.resolve().then(() => {
 a1()
 let promise2 = new Promise((resolve) => {
   resolve('k')
-  console.log('g')
+  console.log('g')  // promise是同步的
 })
 promise2.then((res) => {
-  console.log(res)
+  console.log(res)   // 进入微任务队列
   Promise.resolve().then(() => {
-      console.log('h')
+      console.log('h')  // 进入微任务队列
   })
 })
 console.log('j')
@@ -229,3 +229,98 @@ for (let i = 0; i < params.length; i++) {
 options: {
   importLoaders: 1  //0=>无；1=>postcss-loader; 2=> postcss-loader,sass-loader
 }
+
+// 19.antd table中的selectedRowKeys可以跨页收集数据，selectedRows只是当前页的，故需要将二维数组转换成一位数组
+mapRows = (params) => {
+  var res = [];
+  for (var i = 0; i < params.length; i++) {
+    if (Array.isArray(params[i])) {
+      res = res.concat(this.mapRows(params[i]));
+    } else {
+      res.push(params[i]);
+    }
+  }
+  return res.filter(Boolean); //过滤掉undefined的情况
+}
+
+onSelectChange = (selectedRowKeys, selectedRows) => {
+  const { doubleArr } = this.state;
+  const { current } = this.state.pagination;
+  doubleArr[current ? current - 1 : 0] = selectedRows;
+  const filterRows = this.mapRows(doubleArr);
+  this.setState({
+    selectedRowKeys: selectedRowKeys,
+    filterRows: filterRows,
+  });
+};
+// 分页
+// const [pagination, setPagination] = useState<PaginationConfig>({ defaultCurrent: 1, current: 1, pageSize: 10, total: 0 });
+// 缓存分页数据
+// const [cache, setCache] = useState<{ [x: string]: Istrategy.Content[] }>({});
+// 拉取数据的接口中添加判断
+if (cache[page]) {
+  setDataSource(cache[page]);
+  setPagination({ ...{ pagination }, current: page });
+} else {
+  services.robot.strategy.search_strategy({ page, limit: 10 }).then(res => {
+    if (res.code === 0) {
+      setDataSource(res.data.contents);
+      setPagination({ ...{ pagination }, total: res.data.total, current: page });
+      /** 缓存数据 */
+      Object.assign(cache, { [page]: res.data.contents });
+      setCache(cache);
+    }
+  });
+}
+// 切换分页
+// const onChangePage = (e: PaginationConfig) => {
+//   e.current && fetch(e.current);
+//   setPagination(e);
+// };
+// rowSelection
+const rowSelection = {
+  type: "radio",  // 默认是checkbox  多选checkbox or 单选radio
+  selectedRowKeys,
+  onChange: (/** 选取的Key合集 */ selectedRowKeys, /** 选取的数据合集 */ selectedRows) => {
+    setSelectedRowKeys(selectedRowKeys);
+  },
+};
+
+// 20.ts按照下面的命名方式，可以不用引入文件即可直接使用该定义
+// 接口文件命名  index.interface.ts
+// declare module Iname {
+//   export interface Content {
+//     id: number;
+//     link_a: string;
+//   }
+// }
+
+// 21.react中useParams的使用
+// import { useParams } from 'react-router-dom';
+// 路由定义  编辑：route/:id   新增：route/default
+// const params = useParams<{ id: string }>();
+// 编辑页面获取路由的id:  
+// let routeParam: any = useParams();
+// routeParam.id即为路由中配置的id
+
+// 过滤出对象数组中的id数组
+const idArray = objectArray.map(v => v.id);
+// 过滤出对象数组中满足条件的对象数组
+const filterData = objectArray.filter(x => aimIdArr.includes(x.id));
+
+// 22.实现将一个数组按照每三个一组进行拆分（关联：cache缓存每次加载的数据，减少接口重复的请求）
+var json1=[
+	{'a':'1'},
+	{'b':'2'},
+	{'c':'3'},
+	{'d':'4'},
+	{'e':'5'},
+	{'f':'6'},
+	{'g':'7'},
+	{'h':'8'},
+]
+var json2=[];
+for (var i = 0; i < json1.length; i += 3) {
+	json2.push(json1.slice(i, i + 3))
+}
+console.log(json2);
