@@ -297,7 +297,6 @@ for (let i = 0; i < params.length; i++) {
 // 使用脚手架搭建后，build文件夹会分别自动的生成webpack.base.conf.js（公共配置）、webpack.dev.conf.js（开发环境配置）、webpack.prod.conf.js（生产环境的配置）三个webpack配置文件
 // 参考链接：https://www.cnblogs.com/dengyao-blogs/p/11598431.html   https://blog.csdn.net/qq_39246667/article/details/105840318
 
-
 options: {
   importLoaders: 1  //0=>无；1=>postcss-loader; 2=> postcss-loader,sass-loader
 }
@@ -326,22 +325,18 @@ const isJson = (data) => {
 new Date(1608990783217).toLocaleString()   // 2020/12/26 下午9:53:03
 toLocaleDateString()  // 显示为年/月/日  
 toLocaleTimeString()  // 显示类似下午9:53:03
-toLocaleString()  
+toLocaleString()
 
-// 22.git管理
-// git remote remove <仓库名>
-// git remote add origin <项目仓库地址>
-
-// 23.解决react中使用set设置数据不生效的问题
+// 22.解决react中使用set设置数据不生效的问题
 // react中使用set方法设置更新的数据无效，原因大概是内部的实现原理只是进行了第一层的比较，因此需要通过深拷贝JSON.parse(JSON.stringfy)来开辟新的空间存储数据再set这份新的数据
 
-// 24.for遍历数组修改数组的组成属性集合
+// 23.for遍历数组修改数组的组成属性集合
 // 遍历一个数组只取它的部分属性，并且添加新的字段进行组合，return后会直接返回我们预想的目标数组，同样，如果是只取其中的某一个属性，return这一个属性内容即可
 
-// 25.文本内容解析换行正常显示 white-space: pre-wrap保留空白符序列，但是正常地进行换行
+// 24.文本内容解析换行正常显示 white-space: pre-wrap保留空白符序列，但是正常地进行换行
 // 后台文本域中设置内容，在h5端需要显示程换行，但是通过正则匹配替换str = str.replaceAll(/\r\n/g,'<br/>')无效
 
-// 26.react.CreateRef()
+// 25.react.CreateRef()
 //ref: https://www.cnblogs.com/lanpang9661/p/12604712.html
 textRef = React.createRef();
 focus = () => {
@@ -349,3 +344,159 @@ focus = () => {
   this.textRef.current.focus();
 }
 <div type='text' ref={this.textRef}></div>
+
+
+// 26.定义一个参数对象，根据不同类型传参获取对应的数据信息，如何删除对象中的多余变量
+delete 被删除的变量会变为undefined
+
+// 27.如何将一个对象数组按照三个一组拆分成二维数组(联想：分页加载如何实现利用二维数组缓存已经加载过的数据，避免接口的重复请求)
+slice
+var data = [
+  {name:'Liming',age:'1'},
+  {name:'Liming',age:'2'},
+  {name:'Liming',age:'3'},
+  {name:'Liming',age:'4'},
+  {name:'Liming',age:'5'},
+  {name:'Liming',age:'6'},
+  {name:'Liming',age:'7'},
+  {name:'Liming',age:'8'},
+  {name:'Liming',age:'9'},
+  {name:'Liming',age:'10'},
+]
+var result = [];
+for(var i=0;i<data.length;i+=3){
+console.log('遍历的每一项', i)
+    result.push(data.slice(i,i+3));
+console.log('每次遍历的结果',result)
+}
+console.log("分组数据",result);
+
+// 29.技术分享：http的请求 / react hooks /  webpack打包工具的使用
+
+// 30.父级设置overflow会影响子级的z-index层级设置
+// 层级的优先级展示不只是根据该元素上设置的z-index决定
+// 项目开发过程中发现，在父级元素设置了overflow: auto,里面的弹窗设置了比该父级元素更高的层级，但实际上弹窗的层级却小于该父元素的同级其他元素的层级，排查发现
+// 该弹窗的父级元素上设置的z-index比同级的元素设置的更小，因此弹窗会被遮盖，因为它们比较优先级是比较的被设置为relative的元素上的层级大小，如果是同一relative元素，那么
+// 层级的展示就由各自设置的优先级大小决定了
+
+// 32.浏览器端的缓存有哪些
+sessionStorage/localStorage/cache
+// 33.为什么SPA(单页面应用不利于搜索引擎优化)
+// 34.跨域
+
+// 35.定义react中的字段类型
+
+// 36.antd table中的selectedRowKeys可以跨页收集数据，selectedRows只是当前页的，故需要将二维数组转换成一位数组
+mapRows = params => {
+  var res = [];
+  for (var i = 0; i < params.length; i++) {
+    if (Array.isArray(params[i])) {
+      res = res.concat(this.mapRows(params[i]));
+    } else {
+      res.push(params[i]);
+    }
+  }
+  return res.filter(Boolean); //过滤掉undefined的情况
+};
+
+onSelectChange = (selectedRowKeys, selectedRows) => {
+  const { doubleArr } = this.state;
+  const { current } = this.state.pagination;
+  doubleArr[current ? current - 1 : 0] = selectedRows;
+  const filterRows = this.mapRows(doubleArr);
+  this.setState({
+    selectedRowKeys: selectedRowKeys,
+    filterRows: filterRows,
+  });
+};
+// 分页
+// const [pagination, setPagination] = useState<PaginationConfig>({ defaultCurrent: 1, current: 1, pageSize: 10, total: 0 });
+// 缓存分页数据
+// const [cache, setCache] = useState<{ [x: string]: Istrategy.Content[] }>({});
+// 拉取数据的接口中添加判断
+if (cache[page]) {
+  setDataSource(cache[page]);
+  setPagination({ ...{ pagination }, current: page });
+} else {
+  services.robot.strategy.search_strategy({ page, limit: 10 }).then(res => {
+    if (res.code === 0) {
+      setDataSource(res.data.contents);
+      setPagination({ ...{ pagination }, total: res.data.total, current: page });
+      /** 缓存数据 */
+      Object.assign(cache, { [page]: res.data.contents });
+      setCache(cache);
+    }
+  });
+}
+// 切换分页
+// const onChangePage = (e: PaginationConfig) => {
+//   e.current && fetch(e.current);
+//   setPagination(e);
+// };
+// rowSelection
+const rowSelection = {
+  type: 'radio', // 默认是checkbox  多选checkbox or 单选radio
+  selectedRowKeys,
+  onChange: (/** 选取的Key合集 */ selectedRowKeys, /** 选取的数据合集 */ selectedRows) => {
+    setSelectedRowKeys(selectedRowKeys);
+  },
+};
+
+// 37.ts按照下面的命名方式，可以不用引入文件即可直接使用该定义
+// 接口文件命名  index.interface.ts
+// declare module Iname {
+//   export interface Content {
+//     id: number;
+//     link_a: string;
+//   }
+// }
+
+// 38.react中useParams的使用
+// import { useParams } from 'react-router-dom';
+// 路由定义  编辑：route/:id   新增：route/default
+// const params = useParams<{ id: string }>();
+// 编辑页面获取路由的id:
+// let routeParam: any = useParams();
+// routeParam.id即为路由中配置的id
+
+// 过滤出对象数组中的id数组
+const idArray = objectArray.map(v => v.id);
+// 过滤出对象数组中满足条件的对象数组
+const filterData = objectArray.filter(x => aimIdArr.includes(x.id));
+
+// 39.实现将一个数组按照每三个一组进行拆分（关联：cache缓存每次加载的数据，减少接口重复的请求）
+var json1 = [{ a: '1' }, { b: '2' }, { c: '3' }, { d: '4' }, { e: '5' }, { f: '6' }, { g: '7' }, { h: '8' }];
+var json2 = [];
+for (var i = 0; i < json1.length; i += 3) {
+  json2.push(json1.slice(i, i + 3));
+}
+console.log(json2);
+
+// 40.Object.assign()合并对象的使用
+//  setState({ ...state, ...{ meta: { ...state.meta, [param]: value }}});
+let data = {
+  key1: {
+    oid: '1',
+    _kind_: '11',
+    _source: ['1', '11'],
+  },
+  key2: {
+    oid: '2',
+    _kind_: '22',
+    _source: ['2', '22'],
+  },
+};
+let newdata = Object.assign({ ...data, ...{ key1: { ...data.key1, _source: ['333', '444'] } } });
+
+// 41.webpack中可选链和双问好的引入
+// "plugins": [ 
+//   "@babel/plugin-proposal-nullish-coalescing-operator",//双问号 
+//   "@babel/plugin-proposal-optional-chaining" //可选链 
+// ]
+// 实现es5转es6，webpack需要配置babel-polyfill
+
+// 42.api根据对应环境设置 REACT_APP_API
+
+// 43.设置专栏超过50%即算为曝光的计算 getBoundingClientRect
+
+// 44.tab切换，使得当前点击的tab显示在中间位置的实现逻辑

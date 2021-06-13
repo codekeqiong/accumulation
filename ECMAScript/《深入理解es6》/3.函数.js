@@ -52,7 +52,8 @@ var obj = {
   }
 }
 obj.myfun()  // 我是局部变量test，此时的this指向的是obj对象
-obj.myfun.call(null); // 我是全局对象test,传入null后，此时的this被null替换成全局对象
+obj.myfun.call(null); // 我是全局对象test,传入null或者是undefined，this的指向就会变成全局对象window
+// 注：call、apply、bind三者之间的区别；前两者都可以自动执行，后者需要手动调用，另外apply只接受两个参数且第二个参数是一个数组而其他的两个则可以传入无数个参数
 
 // 不支持arguments对象；不支持重复的命名参数
 

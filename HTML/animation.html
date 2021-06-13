@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跑马灯效果</title>
+    <style>
+        .notice-container {
+            background: #333;
+            font-size: 12px;
+            color: #3E4759;
+            height: 30px;
+            overflow: hidden;
+            box-sizing: border-box;
+            width: 300px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            color: #fff;
+        }
+
+        .notice-container .notice-items {
+            margin: 0;
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            height: 30px;
+        }
+
+        .notice-container .notice-items-inner {
+            display: flex;
+            align-items: center;
+            width: 100%;
+
+        }
+
+        p {
+            flex-shrink: 0;
+            margin-right: 100%;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="notice-container">
+        <div class="notice-items" id="noticeBox" ref="noticeBox">
+            <div class="notice-items-inner" id="noticeInner" ref="noticeInner">
+                <p>start</p>
+                <p>恭喜嘻嘻获得免单名额</p>
+                <p>恭喜哈哈中奖现金红包66.6元</p>
+                <p>恭喜嘿嘿免费获得一张亲友体验卡</p>
+                <p>恭喜嘿嘿免费现金红包6.66元</p>
+                <p>恭喜月是故乡明获得再抽一次的奖励</p>
+                <p>恭喜嘻嘻获得免单名额</p>
+                <p>end</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function initNoticeScroll() {
+        // offsetWidth = width + 左右padding + 左右boder
+        // clientWidth = width + 左右padding
+        let boxWidth = document.getElementById('noticeBox').offsetWidth;
+        let innerWidth = 0;
+        let nodelength = 0;
+        // javascript中children和childNodes的区别
+        // let child = document.getElementById('noticeInner').children;
+        // childNodes：它是标准属性，它返回指定元素的子元素集合，包括HTML节点，所有属性，文本节点。可以通过nodeType来判断是哪种类型的节点，只有当nodeType==1时才是元素节点，2是属性节点，3是文本节点。
+        // children：非标准属性，它返回指定元素的子元素集合。但它只返回HTML节点，甚至不返回文本节点，虽然不是标准的DOM属性，但它和innerHTML方法一样，得到了几乎所有浏览器的支持。
+        let child = document.getElementById('noticeInner').childNodes;
+        child.forEach(item => {
+            if(item.nodeType === 1){
+                nodelength += 1;
+                innerWidth += item.offsetWidth;
+            }
+        })
+        innerWidth += boxWidth * (nodelength - 1);
+        if (innerWidth > boxWidth) {
+            let padding = 300;
+            let animation = () => {
+                padding -= 1;
+                document.getElementById('noticeInner').style.cssText = `transform: translate3d(${padding}px, 0, 0)`;
+                if (padding <= -(innerWidth)) {
+                    padding = 300;
+                    document.getElementById('noticeInner').style.cssText = `transform: translate3d(${padding}px, 0, 0)`;
+                }
+                window.requestAnimationFrame(animation);
+            }
+            animation();
+        }
+    }
+    window.requestAnimationFrame(initNoticeScroll);
+
+</script>
+
+</html>

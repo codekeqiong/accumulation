@@ -130,7 +130,7 @@ let person = {
     return 'hello';
   }
 }
-// 未赋值因而没有明确定义[[HomeObject]]属性，super的所用引用都是通过改属性来确定后续的过程
+// 未赋值因而没有明确定义[[HomeObject]]属性，super的所有引用都是通过改属性来确定后续的过程
 function notFunc() {
   return 'hi';
 }

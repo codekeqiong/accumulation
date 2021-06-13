@@ -1,4 +1,4 @@
- /* 文案超出显示省略号 */
+ /* 单行文案超出显示省略号 */
 .app{
   white-space: nowrap;    /* 显示不换行 */
   text-overflow: ellipsis;  /* 超出的部分显示为省略号 */
@@ -33,3 +33,35 @@ div{
   transition: '';
 }
 /* 子元素设置padding之后会导致外层设置的border-radius失效、ul>li的布局下面会存在 */
+
+/* background属性可以同时设置背景色和背景图，比如活动页面既有主题背景色又有封面头图
+background: #f33b36 url(https://staticqc-operating.lycheer.net/image/weike-SfHAzD-1610980225.png) no-repeat;*/
+
+/* 设置滚动条隐藏 */
+/* .div{
+   scrollbar-width: none;
+   -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+     display: none;
+  }
+} */
+
+/* 设置滚动条的样式 */
+/*  &::-webkit-scrollbar {
+     width: 6px;
+     height: 6px;
+     background-color: transparent;
+ }
+  
+ 定义滚动条的轨道，内阴影及圆角
+ &::-webkit-scrollbar-track {
+     border-radius: 10px;
+     background-color: transparent;
+ }
+  
+ 定义滑块，内阴影及圆角
+ &::-webkit-scrollbar-thumb {
+     height: 10px;
+     border-radius: 10px;
+     background-color: transparent;
+ } */
