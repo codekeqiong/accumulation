@@ -1,8 +1,11 @@
-1.给定一个div，只修改div样式，如何用css实现在 “上下左右距离” 各占页面的10%（注：上下距离为高度页面高度的百分之10%，左右距离为页面宽度的百分之10%）
+1.给定一个div，只修改div样式，如何用css实现在 “上下左右距离” 各占页面的10%（注：上下距离为页面高度的百分之10%，左右距离为页面宽度的百分之10%）
 <style>
     body {  padding: 0;   margin: 0;  }
     div {
-        
+      display: inline-block;
+      width: 80vw;
+      height: 80vh;
+      margin: 10vh auto;
     }
 </style>
 <body>
